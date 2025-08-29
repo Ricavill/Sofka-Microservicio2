@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 @Component
 public class ObjectMapperUtils {
@@ -31,6 +32,10 @@ public class ObjectMapperUtils {
             String message = "Error to convert into Java Object";
             throw new FunctionalException(message, e);
         }
+    }
+
+    public static <T> T mapTo(Map<String, ?> src, Class<T> type) {
+        return mapper.convertValue(src, type);
     }
 
     public static <T> String toString(T object) {

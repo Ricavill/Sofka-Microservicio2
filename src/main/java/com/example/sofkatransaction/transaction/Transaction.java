@@ -1,9 +1,9 @@
 package com.example.sofkatransaction.transaction;
 
+import com.example.sofkatransaction.account.Account;
 import com.example.sofkatransaction.auditing.AuditableEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,12 +16,30 @@ import java.math.BigDecimal;
 public class Transaction extends AuditableEntity<Long> {
 
     private TransactionType transactionType;
-    private BigDecimal value;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account account;
+    private BigDecimal amount;
     private BigDecimal balance;
 
     public Transaction() {
     }
 
+    public Transaction(TransactionRequest transactionRequest) {
+        this.transactionType = transactionRequest.getTransactionType();
+        this.account = transactionRequest.getAccount();
+        this.amount = transactionRequest.getAmount();
+        this.balance = transactionRequest.getBalance();
+    }
+
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     public TransactionType getTransactionType() {
         return transactionType;
@@ -31,12 +49,12 @@ public class Transaction extends AuditableEntity<Long> {
         this.transactionType = transactionType;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
+    public void setAmount(BigDecimal value) {
+        this.amount = value;
     }
 
     public BigDecimal getBalance() {

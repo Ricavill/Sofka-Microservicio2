@@ -1,21 +1,24 @@
 package com.example.sofkatransaction.account;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("cuentas")
 public class AccountController {
+    private final AccountService accountService;
 
-    public AccountController() {
+
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @GetMapping("")
-    public Map<String, Object> getClient() {
-        return Map.of("account", 2);
+    @GetMapping("/{id}")
+    public Account getClient(@PathVariable Long id) {
+        return accountService.getAccountById(id);
+    }
+
+    @PostMapping("")
+    public Account createAccount(@RequestBody AccountRequest request) {
+        return accountService.createAccount(request);
     }
 }
